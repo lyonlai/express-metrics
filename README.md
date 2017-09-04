@@ -173,13 +173,15 @@ var expressMetrics = require('express-metrics');
 var numCPUs = require('os').cpus().length;
 
 if (cluster.isMaster) {
+  // start the server and wait for worker to come online.
+  // start a metrics server on master process
+  expressMetrics.listen(8091);
+
   // Fork workers.
   for (var i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
 
-  // start a metrics server on master process
-  expressMetrics.listen(8091);
 } else {
   var app = express();
 
